@@ -1,0 +1,35 @@
+---
+import qs from "qs";
+
+import Layout from "../layouts/Layout.astro";
+import BlogGrid from "../components/BlogGrid.astro";
+
+let url = import.meta.env.STRAPI_URL + "/api/posts";
+
+const query = qs.stringify({
+  populate: {
+    featuredImage: {
+      fields: ["name", "width", "height", "url"],
+    },
+    author: {
+      populate: {
+        bioImage: {
+          fields: ["name", "width", "height", "url"],
+        },
+      },
+    },
+    category: {
+      populate: true,
+    },
+  },
+});
+
+const posts = await fetch(url + "?" + query).then((response) =>
+  response.json()
+);
+---
+
+<Layout title="Welcome to Astro.">
+  <BlogGrid posts={posts} />
+</Layout>
+

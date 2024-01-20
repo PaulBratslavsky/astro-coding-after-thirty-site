@@ -1,0 +1,54 @@
+---
+import { ca } from "date-fns/locale";
+
+const { post } = Astro.props;
+const { slug, featuredImage, title, excerpt, author, category } = post.attributes;
+const url = import.meta.env.STRAPI_URL;
+
+const authorImage = author.data.attributes.bioImage.data.attributes.url || null;
+const postImage = featuredImage.data.attributes.url || null;
+const categoryName = category.data.attributes.name || null;
+
+console.log(categoryName);
+
+---
+
+<div class="sm:card min-w-96 bg-base-100 sm:shadow-xl relative  overflow-hidden pb-10">
+  <a href={`/post/${slug}`}>
+    <figure>
+      <img
+        class="object-cover w-full h-52 overflow-hidden"
+        src={postImage ? url + postImage : "https://via.placeholder.com/1080"}
+      />
+    </figure>
+
+  
+    <div class="card-body">
+      <h2 class="card-title mb-2">
+        {title}
+      </h2>
+      <p>{excerpt}</p>
+      <div class="card-actions justify-start my-2">
+        <div class="badge badge-outline">{categoryName}</div>
+      </div>
+    </div>
+    <div
+    class="flex-row justify-center items-center overflow-hidden absolute bottom-0 right-0 p-4"
+  >
+    <p class="font-medium text-center text-lg text-secondary cursor-pointer">
+      {author?.data.attributes.name}
+    </p>
+
+    <div class="avatar">
+      <div class="w-16 rounded-full">
+        <img
+          src={authorImage
+            ? url + authorImage
+            : "https://via.placeholder.com/1080"}
+          alt="author picture"
+        />
+      </div>
+    </div>
+  </div>
+  </a>
+</div>
